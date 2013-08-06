@@ -39,42 +39,31 @@
 // ROS headers
 #include <ros/ros.h>
 
-#include <aeas7000_driver/aeas7000_driver.h>
+#include <motion_control_systems_driver/motion_control_systems_driver.h>
 #include <raspi_interface.hpp> 
 
-#define SPI_CHANNEL 0
+#define SERIAL_DEVICE "/dev/ttyAMA0" 
 
 int main( int argc, char **argv )
 {
   
   //ROS initialization and publisher/subscriber setup
-  ros::init( argc, argv, "absolute_encoder" );
+  ros::init( argc, argv, "faulhaber_motor" );
   ros::NodeHandle nh("~");
 
   RaspiInterface* my_Raspi = new RaspiInterface();
 
-  Aeas7000Driver* my_encoder = new Aeas7000Driver( my_Raspi, SPI_CHANNEL );
+  MotionControlSystemsDriver* my_motor = new MotionControlSystemsDriver( my_Raspi, SERIAL_DEVICE, 9600 );
 	
-  if( my_encoder->initialize() == false )
+  if( my_motor->initialize() == false )
   {
-    ROS_ERROR("Error initializing Encoder driver");
+    ROS_ERROR("Error initializing Motor driver");
     return -1;
   }
   
   ros::Rate loop_rate_Hz(10);
   loop_rate_Hz.sleep();
   
-  bool value = 1;
-  bool value2 = 0;
-	
-  while( nh.ok() )
-  {
-    ROS_INFO("Encoder value: %u", my_encoder->get( ) );
-    
-    ros::spinOnce();
-    loop_rate_Hz.sleep();
-  }
-  
-  ROS_WARN( "Closing AEAS-7000 driver." );
+  my_motor->enable(); 
   return 0;  
 }

@@ -60,7 +60,7 @@ public:
    * \param hw hardware interface to use
    * \param mount_point Location the RS232 is mounted (eg "/dev/ttyACA0")
    */
-  MotionControlSystemsDriver( bosch_hardware_interface* hw, std::string mount_point );
+  MotionControlSystemsDriver( bosch_hardware_interface* hw, std::string mount_point, int frequency );
  
   // Destructor:
   ~MotionControlSystemsDriver();
